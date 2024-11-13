@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}My Courses{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>My Courses</h1>
+        {% if enrolled_courses %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for enrollment in enrolled_courses %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ enrollment.course.title }}</h5>
+                                <p class="card-text">{{ enrollment.course.description }}</p>
+                                <a href="{% url 'course_content' enrollment.course.id %}" class="btn btn-primary">Continue Learning</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You haven't enrolled in any courses yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

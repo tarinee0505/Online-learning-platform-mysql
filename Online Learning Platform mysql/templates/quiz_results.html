@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Results for {{ module.title }}</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+            <tr>
+                <td>{{ result.question.text }}</td>
+                <td>
+                    {% if result.user_answer %}
+                        {{ result.user_answer.answer_text }}
+                    {% else %}
+                        No answer
+                    {% endif %}
+                </td>
+                <td>{{ result.question.correct_answer }}</td>
+                <td>
+                    {% if result.is_correct is None %}
+                        Not answered
+                    {% elif result.is_correct %}
+                        <span class="text-success">Correct</span>
+                    {% else %}
+                        <span class="text-danger">Incorrect</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

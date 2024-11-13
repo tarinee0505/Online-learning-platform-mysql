@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Available Courses{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>Available Courses</h1>
+        {% if courses %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for course in courses %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text">{{ course.description }}</p>
+                                <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">View Course</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No courses available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

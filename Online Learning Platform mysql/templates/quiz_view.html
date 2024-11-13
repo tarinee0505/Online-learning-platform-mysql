@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Quiz for {{ module.title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {% for question in questions %}
+        <div class="form-group">
+            <label>{{ question.text }}</label>
+            <input type="text" name="answer_{{ question.id }}" class="form-control" placeholder="Your answer here...">
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit Answers</button>
+</form>
+{% endblock %}

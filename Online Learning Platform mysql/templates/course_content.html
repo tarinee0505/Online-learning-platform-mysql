@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} - Content{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Course Title and Info -->
+        <div class="col-12 mb-4">
+            <h1>{{ course.title }}</h1>
+            <p class="lead">{{ course.description }}</p>
+        </div>
+
+        <!-- Module List -->
+        <div class="col-md-4">
+            <div class="list-group">
+                {% for module in modules %}
+                    <a href="#module-{{ module.id }}" 
+                       class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %}"
+                       data-bs-toggle="list" 
+                       role="tab">
+                        {{ module.title }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Module Content -->
+        <div class="col-md-8">
+            <div class="tab-content">
+                {% for module in modules %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" 
+                         id="module-{{ module.id }}" 
+                         role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ module.title }}</h3>
+                                <p class="card-text">{{ module.description }}</p>
+                                <div class="module-content">
+                                    {{ module.content|safe }}
+                                </div>
+                                {% if module.questions.count > 0 %}
+                                    <a href="{% url 'quiz_view' module.id %}" class="btn btn-primary mt-3">Take Quiz</a>
+                                {% else %}
+                                    <p style="color: blue;">No quiz available for this module.</p>
+                                {% endif %}
+                                {% if module.file_attachment %}
+                                    <a href="{{ module.file_attachment.url }}" class="btn btn-success mt-3" download>Download Attachment</a>
+                                {% endif %}
+                                <!-- Progress Tracking -->
+                                {% for p in progress %}
+                                {% if p.module_id == module.id and not p.completed %}
+                                    <form method="post" action="{% url 'update_progress' module.id %}" class="mt-4 progress-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success">
+                                            Mark as Complete
+                                        </button>
+                                    </form>
+                                
+                                {% endif %}
+                                {% if  p.module_id == module.id and  p.completed   %}
+                                <span style="color: green;">Completed</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="alert alert-info">
+                    No modules available for this course yet.
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap tabs
+    var triggerTabList = [].slice.call(document.querySelectorAll('.list-group-item'))
+    triggerTabList.forEach(function(triggerEl) {
+        new bootstrap.Tab(triggerEl)
+    })
+});
+</script>
+{% endblock %} 

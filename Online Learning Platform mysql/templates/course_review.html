@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Reviews for {{ course.title }}</h2>
+
+<div>
+    {% for review in reviews %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ review.user.username }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Rating: {{ review.rating }}</h6>
+                <p class="card-text">{{ review.comment }}</p>
+                <small class="text-muted">Reviewed on {{ review.created_at }}</small>
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info">
+            No reviews yet.
+        </div>
+    {% endfor %}
+</div>
+
+{% if not is_reviewed %}
+<h3>Leave a Review</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
+{% endif %}
+
+
+{% endblock %}
